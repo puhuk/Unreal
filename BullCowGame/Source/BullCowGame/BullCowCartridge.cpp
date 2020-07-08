@@ -9,10 +9,6 @@ void UBullCowCartridge::BeginPlay() // When the game starts
     SetupGame();
 
     PrintLine(TEXT("The Hidden Word is : %s."),*HiddenWord);
-    // PrintLine(FString::Printf(TEXT("The Hidden Word is : %s"),*HiddenWord));
-
-    
-    
     
 }
 
@@ -26,21 +22,19 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
             PrintLine(TEXT("You have Won!"));
             EndGame();
         }else{
-            if(Input.Len() != HiddenWord.Len()){
-                PrintLine(TEXT("The Hidden Word is %i characters long. \nYou have Lost"), HiddenWord.Len());
+            --Lives;
+            PrintLine(TEXT("Lost a life!"));
+            if(Lives>0){
+                if(Input.Len() != HiddenWord.Len()){
+                    PrintLine(TEXT("Sorry, try guessing again! \nYou have %i lives remaining"), Lives);
+                    EndGame();
+                }
+            }else{
+                PrintLine(TEXT("You have no lives left!"));
                 EndGame();
             }
-            PrintLine(TEXT("You have Lost!"));
-            // bGameOver = true;
         }
-
     }
-    
-
-    
-    
-
-
 }
 
 void UBullCowCartridge::SetupGame()
@@ -49,10 +43,11 @@ void UBullCowCartridge::SetupGame()
     PrintLine(TEXT("Welcome to Bull Cows!"));
 
     HiddenWord = TEXT("cake");
-    Lives =4;
+    Lives =HiddenWord.Len();
     bGameOver = false;
 
     PrintLine(TEXT("Guess The %i letter word!"), HiddenWord.Len());
+    PrintLine(TEXT("You have %i Lives"),Lives);
     PrintLine(TEXT("Type in your guess.\nPress enter to continue.."));
 
 }
