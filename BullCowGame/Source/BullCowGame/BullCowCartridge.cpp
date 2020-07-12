@@ -5,9 +5,7 @@
 void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
-
     SetupGame();
-
     PrintLine(TEXT("The Hidden Word is : %s."),*HiddenWord);
     
 }
