@@ -27,7 +27,7 @@ void UBullCowCartridge::SetupGame()
 
     PrintLine(TEXT("Welcome to Bull Cows!"));
 
-    HiddenWord = TEXT("cake");
+    HiddenWord = TEXT("cakes");
     Lives =HiddenWord.Len();
     bGameOver = false;
 
@@ -35,12 +35,16 @@ void UBullCowCartridge::SetupGame()
     PrintLine(TEXT("You have %i Lives"),Lives);
     PrintLine(TEXT("Type in your guess.\nPress enter to continue.."));
 
+    const TCHAR HW[] = TEXT("plums");
+    PrintLine(TEXT("Charcter 1 of the hidden word is : %c"),HiddenWord[0]);
+    PrintLine(TEXT("The 4th charcter of HW is : %c"),HW[3]);
+
 }
 
 void UBullCowCartridge::EndGame()
 {
     bGameOver=true;
-    PrintLine(TEXT("Press enter to go play again.."));
+    PrintLine(TEXT("\nPress enter to go play again.."));
 }
 
 void UBullCowCartridge::ProcessGuess(FString Guess)
@@ -48,18 +52,30 @@ void UBullCowCartridge::ProcessGuess(FString Guess)
     if(Guess == HiddenWord){
         PrintLine(TEXT("You have Won!"));
         EndGame();
-    }else{
-        PrintLine(TEXT("Lost a life!"));
-        PrintLine(TEXT("%i"),--Lives);
-        if(Lives>0){
-            if(Guess.Len() != HiddenWord.Len()){
-                PrintLine(TEXT("Sorry, try guessing again! \nYou have %i lives remaining"), Lives);
-                EndGame();
-            }
-        }else{
-            PrintLine(TEXT("You have no lives left!"));
-            EndGame();
-        }
+        return;
     }
+
+    if(!IsIsogram()){
+        PrintLine(TEXT("No repeating letters, guess again"));
+    }
+    
+    if(Guess.Len() != HiddenWord.Len()){
+        PrintLine(TEXT("The hidden word is %i letters long"), HiddenWord.Len());
+        PrintLine(TEXT("Sorry, try guessing again! \nYou have %i lives remaining"), Lives);
+        return;
+    }
+
+    PrintLine(TEXT("Lost a life!"));
+    --Lives;
+
+    if(Lives<=0){
+        ClearScreen();
+        PrintLine(TEXT("You have no lives left!"));
+        PrintLine(TEXT("The hidden word was: %s"),*HiddenWord);
+        EndGame();
+        return; 
+    }
+
+    PrintLine(TEXT("Guess again, you have %i lives left"),Lives);
 
 }
